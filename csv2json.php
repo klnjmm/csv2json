@@ -2,7 +2,7 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-$options = getopt('', ['pretty', 'fields:', 'aggregate:']);
+$options = getopt('', ['pretty', 'fields:', 'aggregate:', 'desc:']);
 
 $csvFile = new \SplFileObject(__DIR__.'/data.csv');
 $csvReader = new \Klnjmm\CsvReader($csvFile);
@@ -17,8 +17,32 @@ if (isset($options['aggregate'])) {
     $fieldAggregator = new \Klnjmm\FieldAggregator($options['aggregate']);
 }
 
+$fieldSpecifications = [];
+if (isset($options['desc'])) {
+    $descriptionFile = new \SplFileObject($options['desc']);
+    $descriptionFileReader = new \Klnjmm\DescriptionFileReader($descriptionFile);
+    $fieldSpecifications = $descriptionFileReader->read();
+}
+
+$nullableParser = new \Klnjmm\Parser\NullableParser();
+$integerParser = new \Klnjmm\Parser\IntegerParser();
+$stringParser = new \Klnjmm\Parser\StringParser();
+$availableParsers = [
+    'int' => $integerParser,
+    'integer' => $integerParser,
+    'string' => $stringParser,
+];
+
+$fieldSpecificationParserFactory = new \Klnjmm\FieldSpecificationParserFactory($nullableParser, $availableParsers);
+$fieldSpecifications = $fieldSpecificationParserFactory->build($fieldSpecifications);
+
+$fieldParser = new \Klnjmm\FieldParser($fieldSpecifications);
+$rowParser = new \Klnjmm\RowParser($fieldParser);
+
+
 foreach ($csvReader->read() as $row) {
     $row = $fieldSelector->select($row);
+    $row = $rowParser->parseRow($row);
     $fieldAggregator->aggregate($row);
 }
 

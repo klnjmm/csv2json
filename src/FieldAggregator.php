@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Klnjmm;
-
 
 class FieldAggregator implements FieldAggregatorInterface
 {

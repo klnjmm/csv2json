@@ -9,23 +9,16 @@ use Klnjmm\Parser\ParserInterface;
 
 class FieldSpecificationParserFactory
 {
-    /**
-     * @var ParserInterface
-     */
     private ParserInterface $nullableParser;
     private array $availableParser;
 
-    /**
-     * @param NullableParser $nullableParser
-     * @param ParserInterface[] $availableParser
-     */
     public function __construct(NullableParser $nullableParser, array $availableParser)
     {
         $this->nullableParser = $nullableParser;
         $this->availableParser = $availableParser;
     }
 
-    public function build(array $rawSpecifications)
+    public function build(array $rawSpecifications): iterable
     {
         $parsersByField = [];
         foreach ($rawSpecifications as $field => $specification) {
@@ -37,7 +30,7 @@ class FieldSpecificationParserFactory
             $specification = ltrim($specification, '?');
             // ?int => int
             if (false === isset($this->availableParser[$specification])) {
-                throw new \Exception('Unknown data type '.$specification);
+                throw new \Exception('Unknown data type ' . $specification);
             }
 
             $parsers[] = $this->availableParser[$specification];

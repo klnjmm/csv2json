@@ -1,12 +1,9 @@
 <?php
 
-
 namespace Klnjmm;
-
 
 class FieldSelector implements FieldSelectorInterface
 {
-
     private array $selectedFields;
 
     public function __construct(array $selectedFields)

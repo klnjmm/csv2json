@@ -23,5 +23,7 @@
             "email": "jimmy@foo.baz"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=7.4"
+    }
 }

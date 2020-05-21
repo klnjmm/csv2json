@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Klnjmm;
 
-
 class DescriptionFileReader
 {
     private \SplFileObject $descriptionFile;
@@ -14,13 +13,16 @@ class DescriptionFileReader
         $this->descriptionFile = $descriptionFile;
     }
 
-    public function read()
+    public function read(): iterable
     {
-        $this->descriptionFile->setFlags(\SplFileObject::READ_AHEAD | \SplFileObject::DROP_NEW_LINE | \SplFileObject::SKIP_EMPTY);
+        $this->descriptionFile->setFlags(
+            \SplFileObject::READ_AHEAD |
+            \SplFileObject::DROP_NEW_LINE |
+            \SplFileObject::SKIP_EMPTY
+        );
 
         $rowDescription = [];
-        foreach($this->descriptionFile as $row) {
-
+        foreach ($this->descriptionFile as $row) {
             $rowInformations = explode('#', $row);
             if (trim($rowInformations[0]) === '') {
                 continue;
@@ -35,6 +37,5 @@ class DescriptionFileReader
         }
 
         return $fieldSpecification;
-
     }
 }

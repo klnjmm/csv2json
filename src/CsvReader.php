@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Klnjmm;
-
 
 class CsvReader
 {
@@ -15,7 +13,12 @@ class CsvReader
 
     public function read(): iterable
     {
-        $this->csvFile->setFlags(\SplFileObject::READ_CSV | \SplFileObject::SKIP_EMPTY | \SplFileObject::DROP_NEW_LINE | \SplFileObject::READ_AHEAD);
+        $this->csvFile->setFlags(
+            \SplFileObject::READ_CSV |
+            \SplFileObject::SKIP_EMPTY |
+            \SplFileObject::DROP_NEW_LINE |
+            \SplFileObject::READ_AHEAD
+        );
         $this->csvFile->setCsvControl(';');
 
         $data = [];
